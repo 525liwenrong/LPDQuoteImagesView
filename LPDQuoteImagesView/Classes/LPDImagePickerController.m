@@ -41,8 +41,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    self.navigationBar.barStyle = UIBarStyleBlack;
-    self.navigationBar.translucent = YES;
+    self.navigationBar.barStyle = UIBarStyleDefault;
+    self.navigationBar.translucent = NO;
     [LPDImageManager manager].shouldFixOrientation = NO;
     
     // Default appearance, you can reset these after this method
@@ -51,7 +51,8 @@
     self.oKButtonTitleColorDisabled = [UIColor lightGrayColor];
     
     if (iOS7Later) {
-        self.navigationBar.barTintColor = [UIColor colorWithRed:(34/255.0) green:(34/255.0)  blue:(34/255.0) alpha:1.0];
+//        self.navigationBar.barTintColor = [UIColor colorWithRed:(34/255.0) green:(34/255.0)  blue:(34/255.0) alpha:1.0];
+        self.navigationBar.barTintColor = [UIColor colorWithRed:(54/255.0) green:(164/255.0) blue:(233/255.0) alpha:1.0];
         self.navigationBar.tintColor = [UIColor whiteColor];
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
@@ -400,7 +401,6 @@
 }
 
 #pragma mark - Public
-
 - (void)cancelButtonClick {
     if (self.autoDismiss) {
         [self dismissViewControllerAnimated:YES completion:^{
@@ -443,7 +443,9 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:imagePickerVc.cancelBtnTitleStr style:UIBarButtonItemStylePlain target:imagePickerVc action:@selector(cancelButtonClick)];
     [self configTableView];
     // 1.6.10 采用微信的方式，只在相册列表页定义backBarButtonItem为返回，其余的顺系统的做法
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[NSBundle lpd_localizedStringForKey:@"Back"] style:UIBarButtonItemStylePlain target:nil action:nil];
+//    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[NSBundle lpd_localizedStringForKey:@"Back"] style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:nil action:nil];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -470,7 +472,9 @@
         if (!_tableView) {
             CGFloat top = 44;
             if (iOS7Later) top += 20;
-            _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, top, self.view.lpd_width, self.view.lpd_height - top) style:UITableViewStylePlain];
+//            _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, top, self.view.lpd_width, self.view.lpd_height - top) style:UITableViewStylePlain];
+            _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.lpd_width, self.view.lpd_height - top-64) style:UITableViewStylePlain];
+
             _tableView.rowHeight = 70;
             _tableView.tableFooterView = [[UIView alloc] init];
             _tableView.dataSource = self;

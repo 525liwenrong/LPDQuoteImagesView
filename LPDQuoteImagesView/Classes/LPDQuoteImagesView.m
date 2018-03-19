@@ -283,11 +283,13 @@
 
 
 #pragma mark - LPDImagePickerControllerDelegate
-
-
 /// 用户点击了取消 代理
 - (void)lpd_imagePickerControllerDidCancel:(LPDImagePickerController *)picker {
   NSLog(@"cancel");
+    
+    if (self.finishBlock) {
+        self.finishBlock();
+    }
 }
 
 
@@ -295,8 +297,10 @@
 - (void)imagePickerController:(LPDImagePickerController *)picker didFinishPickingPhotos:(NSArray *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
   _selectedPhotos = [NSMutableArray arrayWithArray:photos];
   _selectedAssets = [NSMutableArray arrayWithArray:assets];
-  
-  [_collectionView reloadData];
+    if (self.finishBlock) {
+        self.finishBlock();
+    }
+    [_collectionView reloadData];
   
   //test**********[self printAssetsName:assets];
 }
@@ -326,7 +330,10 @@
       NSIndexPath *indexPath = [NSIndexPath indexPathForItem:sender.tag inSection:0];
       [_collectionView deleteItemsAtIndexPaths:@[indexPath]];
     } completion:^(BOOL finished) {
-      [_collectionView reloadData];
+        if (self.finishBlock) {
+            self.finishBlock();
+        }
+        [_collectionView reloadData];
     }];
   }
 }

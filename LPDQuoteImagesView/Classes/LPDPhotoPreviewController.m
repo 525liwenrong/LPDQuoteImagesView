@@ -62,7 +62,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES];
-    if (iOS7Later) [UIApplication sharedApplication].statusBarHidden = YES;
+//    if (iOS7Later) [UIApplication sharedApplication].statusBarHidden = YES;
     if (_currentIndex) [_collectionView setContentOffset:CGPointMake((self.view.lpd_width + 20) * _currentIndex, 0) animated:NO];
     [self refreshNaviBarAndBottomBarState];
 }
@@ -82,7 +82,7 @@
     
     _naviBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.lpd_width, 64)];
     _naviBar.backgroundColor = [UIColor colorWithRed:(34/255.0) green:(34/255.0)  blue:(34/255.0) alpha:0.7];
-    
+
     _backButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 44, 44)];
     [_backButton setImage:[UIImage imageNamedFromMyBundle:@"navi_back.png"] forState:UIControlStateNormal];
     [_backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -179,7 +179,6 @@
 
 
 #pragma mark - Click Event
-
 - (void)select:(UIButton *)selectButton {
     LPDImagePickerController *_lpdImagePickerVc = (LPDImagePickerController *)self.navigationController;
     LPDAssetModel *model = _models[_currentIndex];

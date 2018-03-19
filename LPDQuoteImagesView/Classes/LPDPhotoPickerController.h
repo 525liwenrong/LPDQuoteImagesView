@@ -14,8 +14,8 @@
 @property (nonatomic, assign) BOOL isFirstAppear;
 @property (nonatomic, assign) NSInteger columnNumber;
 @property (nonatomic, strong) LPDAlbumModel *model;
-
 @property (nonatomic, copy) void (^backButtonClickHandle)(LPDAlbumModel *model);
+
 
 @end
 

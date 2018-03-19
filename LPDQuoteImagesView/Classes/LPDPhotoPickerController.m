@@ -15,6 +15,7 @@
 #import "LPDImageManager.h"
 #import "LPDVideoPlayerController.h"
 #import "UIImage+MyBundle.h"
+
 @interface LPDPhotoPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIAlertViewDelegate>
 
 {
@@ -69,8 +70,11 @@ static CGSize AssetGridThumbnailSize;
     _isSelectOriginalPhoto = lpdImagePickerVc.isSelectOriginalPhoto;
     _shouldScrollToBottom = YES;
     self.view.backgroundColor = [UIColor whiteColor];
-    self.navigationItem.title = _model.name;
+//    self.navigationItem.title = _model.name;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:lpdImagePickerVc.cancelBtnTitleStr style:UIBarButtonItemStylePlain target:lpdImagePickerVc action:@selector(cancelButtonClick)];
+    self.navigationItem.title = @"照片";
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:lpdImagePickerVc action:@selector(cancelButtonClick)];
+
     _showTakePhotoBtn = (([[LPDImageManager manager] isCameraRollAlbum:_model.name]) && lpdImagePickerVc.allowTakePicture);
     if (!lpdImagePickerVc.sortAscendingByModificationDate && _isFirstAppear && iOS8Later) {
         [[LPDImageManager manager] getCameraRollAlbum:lpdImagePickerVc.allowPickingVideo allowPickingImage:lpdImagePickerVc.allowPickingImage completion:^(LPDAlbumModel *model) {
@@ -90,6 +94,8 @@ static CGSize AssetGridThumbnailSize;
         }
     }
     // [self resetCachedAssets];
+    
+    
 }
 
 - (void)initSubviews {
@@ -123,7 +129,9 @@ static CGSize AssetGridThumbnailSize;
     CGFloat top = 44;
     if (iOS7Later) top += 20;
     CGFloat collectionViewHeight = lpdImagePickerVc.showSelectBtn ? self.view.lpd_height - 50 - top : self.view.lpd_height - top;
-    _collectionView = [[LYGCollectionView alloc] initWithFrame:CGRectMake(0, top, self.view.lpd_width, collectionViewHeight) collectionViewLayout:layout];
+//    _collectionView = [[LYGCollectionView alloc] initWithFrame:CGRectMake(0, top, self.view.lpd_width, collectionViewHeight) collectionViewLayout:layout];
+    _collectionView = [[LYGCollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.lpd_width, collectionViewHeight) collectionViewLayout:layout];
+
     _collectionView.backgroundColor = [UIColor whiteColor];
     _collectionView.dataSource = self;
     _collectionView.delegate = self;
@@ -150,6 +158,8 @@ static CGSize AssetGridThumbnailSize;
     }
     CGSize cellSize = ((UICollectionViewFlowLayout *)_collectionView.collectionViewLayout).itemSize;
     AssetGridThumbnailSize = CGSizeMake(cellSize.width * scale, cellSize.height * scale);
+    
+   
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -157,13 +167,21 @@ static CGSize AssetGridThumbnailSize;
     if (iOS8Later) {
         // [self updateCachedAssets];
     }
+    
+    // 设置item属性进行设置
+    UIBarButtonItem *item = [UIBarButtonItem appearance];
+    // UIControlStateNormal
+    NSMutableDictionary *itemAttrs = [NSMutableDictionary dictionary];
+    itemAttrs[NSForegroundColorAttributeName] = [UIColor blackColor];
+    itemAttrs[NSFontAttributeName] = [UIFont systemFontOfSize:16];
+    [item setTitleTextAttributes:itemAttrs forState:UIControlStateNormal];
 }
 
 - (void)configBottomToolBar {
     LPDImagePickerController *lpdImagePickerVc = (LPDImagePickerController *)self.navigationController;
     if (!lpdImagePickerVc.showSelectBtn) return;
     
-    UIView *bottomToolBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.lpd_height - 50, self.view.lpd_width, 50)];
+    UIView *bottomToolBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.lpd_height - 50-64, self.view.lpd_width, 50)];
     CGFloat rgb = 253 / 255.0;
     bottomToolBar.backgroundColor = [UIColor colorWithRed:rgb green:rgb blue:rgb alpha:1.0];
     
@@ -287,7 +305,10 @@ static CGSize AssetGridThumbnailSize;
             if (info)  [infoArr replaceObjectAtIndex:i withObject:info];
             [assets replaceObjectAtIndex:i withObject:model.asset];
             
-            for (id item in photos) { if ([item isKindOfClass:[NSNumber class]]) return; }
+            for (id item in photos) {
+                if ([item isKindOfClass:[NSNumber class]])
+                return;
+            }
             
             if (havenotShowAlert) {
                 [self didGetAllPhotos:photos assets:assets infoArr:infoArr];
@@ -302,6 +323,8 @@ static CGSize AssetGridThumbnailSize;
             }
         } networkAccessAllowed:YES];
     }
+    
+    
     if (lpdImagePickerVc.selectedModels.count <= 0) {
         [self didGetAllPhotos:photos assets:assets infoArr:infoArr];
     }
